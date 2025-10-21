@@ -11,10 +11,8 @@ int main(int argc, char *argv[])
     style_file.open(QFile::ReadOnly);
     app.setStyleSheet(QLatin1String(style_file.readAll()));
 
-    MainWindow window = MainWindow();
+    MainWidget window = MainWidget();
     window.show();
-
-    //Server::Requester::run();
 
     return app.exec();
 }

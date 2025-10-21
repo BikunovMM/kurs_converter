@@ -8,7 +8,6 @@
 #include <boost/json.hpp>
 #include <iostream>
 #include "SessionsManager.hpp"
-//#include "MainWindow.hpp"
 
 namespace ip   = boost::asio::ip;
 namespace asio = boost::asio;
@@ -42,10 +41,6 @@ namespace Server {
         static void add_convertation_to_history(const char *inpath,
                                                 const char *outpath,
                                                 std::function<void(char*, long long)> show_banner);
-        //static void run();
-        //static asio::io_context& io_ctx();
-    private:
-        //static asio::io_context io_ctx_;
     };
 
     enum SQL_OPERATIONS {
@@ -68,6 +63,5 @@ namespace Server {
         return 8765;
     }
 }
-
 
 #endif // SERVERREQUESTER_HPP

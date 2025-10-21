@@ -2,6 +2,8 @@
 
 namespace converter
 {
+    int apts = 0;
+
     struct format_data get_supported_extensions(const char *filename)
     {
         struct format_data fdata;
@@ -47,8 +49,6 @@ namespace converter
             goto cleanup;
         }
 
-        printf("input_file duration: %zu, nb_streams: %d, bit_rate: %zu\n", ifmt_ctx->duration, ifmt_ctx->nb_streams, ifmt_ctx->bit_rate);
-
         idata.duration = ifmt_ctx->duration;
         idata.nb_streams = ifmt_ctx->nb_streams;
         idata.bit_rate = ifmt_ctx->bit_rate;
@@ -61,13 +61,6 @@ namespace converter
             AVPacket            *pkt        = nullptr;
             AVFrame             *frame      = nullptr;
             AVDictionaryEntry   *tag = nullptr;
-
-            if (ifmt_ctx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
-                puts("* Video");
-            }
-            else if (ifmt_ctx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
-                puts("* Audio");
-            }
 
             dec_par = ifmt_ctx->streams[i]->codecpar;
             dec = avcodec_find_decoder(dec_par->codec_id);
@@ -90,7 +83,6 @@ namespace converter
 
             av_packet_unref(pkt);
             av_frame_unref(frame);
-
         }
 
     cleanup:
@@ -148,8 +140,6 @@ namespace converter
         return res;
     }
 
-    int apts = 0;
-
     int encode_audio_frame(AVFrame         *frame,
                            AVFormatContext *ofmt_ctx,
                            AVFormatContext *ifmt_ctx,
@@ -192,7 +182,6 @@ namespace converter
         }
 
         if (!frame) {
-            std::cout << "adding pts to packets by hands" << std::endl;
             int64_t sample_duration = av_rescale_q(out_pkt->duration, av_make_q(1, enc_ctx->sample_rate), ofmt_ctx->streams[audio_index]->time_base);
             out_pkt->pts = apts;
             out_pkt->dts = apts;
@@ -265,8 +254,6 @@ namespace converter
             goto cleanup;
         }
 
-        std::cout << "inpath: " << inpath << ", outpath: " << outpath << "data->audio_codec: " << data->audio_codec << std::endl;
-
         /*
          *  SETTING UP DEC AND ENC CODEC_CONTEXTs
          */
@@ -274,13 +261,6 @@ namespace converter
             AVCodecParameters *dec_par = NULL;
 
             dec_par = ifmt_ctx->streams[i]->codecpar;
-
-            if (ifmt_ctx->streams[i]->time_base.den) {
-                std::cout << "i: " << i << ", den: " << ifmt_ctx->streams[i]->time_base.den << std::endl;
-            }
-            else {
-                std::cerr << "nononono" << std::endl;
-            }
 
             if (dec_par->codec_type == AVMEDIA_TYPE_VIDEO) {
                 video_index = i;
@@ -381,23 +361,7 @@ namespace converter
                         enc_ctx[0]->flags |= AV_CODEC_FLAG_QSCALE;
                         enc_ctx[0]->global_quality = FF_QP2LAMBDA * 75; // Качество 75%
                     }
-                    /*
-                    if (data->video_codec == AV_CODEC_ID_MJPEG) {
-                        enc_ctx[0]->bit_rate = 0;
-                        enc_ctx[0]->rc_min_rate = 0;
-                        enc_ctx[0]->rc_max_rate = 0;
-                        enc_ctx[0]->rc_buffer_size = 0;
 
-                        enc_ctx[0]->flags |= AV_CODEC_FLAG_QSCALE;
-                        enc_ctx[0]->global_quality = FF_QP2LAMBDA * 75; // Качество 75%
-                    }
-                    else {
-                        enc_ctx[0]->bit_rate        = 2 * 1000 * 1000;
-                        enc_ctx[0]->rc_buffer_size  = 4 * 1000 * 1000;
-                        enc_ctx[0]->rc_max_rate     = 2 * 1000 * 1000;
-                        enc_ctx[0]->rc_min_rate     = 2.5f * 1000 * 1000;
-                    }
-                    */
                     enc_ctx[0]->sample_aspect_ratio =
                         dec_ctx[0]->sample_aspect_ratio;
                     enc_ctx[0]->pix_fmt = data->pixfmt;
@@ -516,15 +480,11 @@ namespace converter
 
                     av_channel_layout_default(&enc_ctx[1]->ch_layout,
                                               OUT_AUDIO_CH);
-                    enc_ctx[1]->sample_rate = dec_ctx[1]->sample_rate;//data->sample_rate;//dec_ctx[1]->sample_rate;//data->sample_rate;//
+                    enc_ctx[1]->sample_rate = dec_ctx[1]->sample_rate;
                     enc_ctx[1]->sample_fmt  = data->smplfmt;
-                    enc_ctx[1]->bit_rate    = data->bit_rate ? data->bit_rate : 0;  //enc_ctx[1]->bit_rate    = OUT_BIT_RATE;
+                    enc_ctx[1]->bit_rate    = data->bit_rate ? data->bit_rate : 0;
 
-                    //enc_ctx[1]->time_base = ifmt_ctx->streams[i]->time_base;
-                    //enc_stream->time_base = ifmt_ctx->streams[i]->time_base;
-                    //enc_stream->duration  = ifmt_ctx->streams[i]->duration;
-                    //enc_stream->time_base = ifmt_ctx->streams[i]->time_base;
-                    enc_stream->time_base.den = dec_ctx[1]->sample_rate;//data->sample_rate;
+                    enc_stream->time_base.den = dec_ctx[1]->sample_rate;
                     enc_stream->time_base.num = 1;
 
                     av_dict_set(&opts, "strict", "experimental", 0);
@@ -597,9 +557,6 @@ namespace converter
                                             ifmt_ctx->streams[i]->codecpar);
                 }
             }
-            else {
-                puts("skippind unknown stream");
-            }
         }
 
         /*
@@ -662,7 +619,7 @@ namespace converter
          *  READING INPUT FILEs PACKETS AND TRANSCODE OR REMUX THEM
          */
 
-        while (1) {
+        for (;;) {
             AVCodecParameters *codecpar = NULL;
             int                finished = 0;
 
@@ -797,7 +754,6 @@ namespace converter
                                                 " On line: %d.\n", __LINE__);
                                 goto cleanup;
                             }
-                            //}
 
                             if (finished) {
                                 res = 0;
@@ -833,12 +789,10 @@ namespace converter
                                               (const uint8_t**)in_frame->extended_data,
                                               in_frame->nb_samples);
                             if (res < 0) {
-                                std::cout << "err635: " <<  __LINE__ << std::endl;
                                 fprintf(stderr, "Failed to swr_convert."
                                                 " On line: %d.\n", __LINE__);
                                 av_freep(&converted_in_samples[0]);
                                 free(*converted_in_samples);
-                                std::cout << "goto cleanup: " << __LINE__ << std::endl;
                                 goto cleanup;
                             }
 
@@ -930,7 +884,7 @@ namespace converter
                 }
             }
         }
-std::cout << "886" << std::endl;
+
         //  flush video
         if (data->video_codec != AV_CODEC_ID_NONE && !cpy_video) {
             do {
@@ -941,7 +895,6 @@ std::cout << "886" << std::endl;
 
         // flush audio
         if (data->audio_codec != AV_CODEC_ID_NONE && !cpy_audio) {
-            puts("flushing");
             int data_written;
             int flushed_frames = 0;
 
@@ -958,9 +911,8 @@ std::cout << "886" << std::endl;
                 }
 
             } while (data_written);
-            std::cout << "flushed_frames: " << flushed_frames << std::endl;
         }
-std::cout << "912" << std::endl;
+
         res = av_write_trailer(ofmt_ctx);
         if (res < 0) {
             fprintf(stderr,
@@ -969,9 +921,7 @@ std::cout << "912" << std::endl;
             goto cleanup;
         }
 
-    cleanup:
-        fflush(stderr);
-        std::cout << "923" << std::endl;
+    cleanup:     
         if (fifo) {
             av_audio_fifo_free(fifo);
         }
@@ -986,7 +936,6 @@ std::cout << "912" << std::endl;
             av_packet_free(&out_pkt);
         }
 
-
         if (in_frame) {
             av_frame_free(&in_frame);
         }
@@ -994,20 +943,16 @@ std::cout << "912" << std::endl;
             av_frame_free(&out_frame);
         }
 
-
         if (sws_ctx) {
             sws_freeContext(sws_ctx);
         }
-
 
         if (enc_ctx[0]) {
             avcodec_free_context(&enc_ctx[0]);
         }
         if (enc_ctx[1]) {
-            std::cout << "941. free enc_ctx[1]" << std::endl;
             avcodec_free_context(&enc_ctx[1]);
         }
-
 
         if (dec_ctx[0]) {
             avcodec_free_context(&dec_ctx[0]);
@@ -1016,7 +961,6 @@ std::cout << "912" << std::endl;
             avcodec_free_context(&dec_ctx[1]);
         }
 
-
         if (ofmt_ctx->pb) {
             avio_closep(&ofmt_ctx->pb);
         }
@@ -1024,11 +968,9 @@ std::cout << "912" << std::endl;
             avformat_free_context(ofmt_ctx);
         }
 
-
         if (ifmt_ctx) {
             avformat_close_input(&ifmt_ctx);
         }
-
 
         Server::Requester::add_convertation_to_history(inpath, outpath, show_banner);
 

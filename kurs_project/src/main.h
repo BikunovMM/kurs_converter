@@ -2,6 +2,6 @@
 #define MAIN_H
 
 #include <QApplication>
-#include "MainWindow.hpp"
+#include "MainWidget.hpp"
 
 #endif // MAIN_H

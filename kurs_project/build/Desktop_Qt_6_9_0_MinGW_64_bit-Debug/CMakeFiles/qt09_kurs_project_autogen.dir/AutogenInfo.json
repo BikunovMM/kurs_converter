@@ -333,9 +333,9 @@
 	"HEADERS" : 
 	[
 		[
-			"C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/MainWindow.hpp",
+			"C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/MainWidget.hpp",
 			"MU",
-			"UVLADIE3JM/moc_MainWindow.cpp",
+			"UVLADIE3JM/moc_MainWidget.cpp",
 			null
 		],
 		[
@@ -435,7 +435,7 @@
 	"SOURCES" : 
 	[
 		[
-			"C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/MainWindow.cpp",
+			"C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/MainWidget.cpp",
 			"MU",
 			null
 		],

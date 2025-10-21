@@ -11,7 +11,6 @@ void Sessions::Manager::load_session(char *login, char *password, long long *id)
              settings->value("user/login").toByteArray().data());
     snprintf(password, 0, "%s",
              settings->value("user/password").toByteArray().data());
-    //id = settings->value("user/id").toULongLong().
 }
 
 void Sessions::Manager::delete_session() {

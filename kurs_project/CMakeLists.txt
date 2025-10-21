@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(kurs_project LANGUAGES CXX)
+project(qt09_kurs_project LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -14,11 +14,11 @@ set(app_icon_resource_window "${CMAKE_SOURCE_DIR}/resources/resource_icon.rc")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets)
 
-add_executable(kurs_project
+add_executable(qt09_kurs_project
   ${CMAKE_SOURCE_DIR}/src/main.cpp
   ${CMAKE_SOURCE_DIR}/src/main.h
-  ${CMAKE_SOURCE_DIR}/src/MainWindow.hpp
-  ${CMAKE_SOURCE_DIR}/src/MainWindow.cpp
+  ${CMAKE_SOURCE_DIR}/src/MainWidget.hpp
+  ${CMAKE_SOURCE_DIR}/src/MainWidget.cpp
   ${CMAKE_SOURCE_DIR}/src/converter.h
   ${CMAKE_SOURCE_DIR}/src/converter.cpp
   ${CMAKE_SOURCE_DIR}/src/SessionsManager.hpp
@@ -38,10 +38,10 @@ find_library(SWSCALE swscale PATHS "C:/msys64/ucrt64/lib")
 find_library(SWRESAMPLE swresample PATHS "C:/msys64/ucrt64/lib")
 find_library(BOOST_ASIO ws2_32 mswsock "C:/msys64/ucrt64/lib")
 
-target_include_directories(kurs_project PRIVATE
+target_include_directories(qt09_kurs_project PRIVATE
   "C:\\msys64\\ucrt64\\include"
 )
-target_link_libraries(kurs_project
+target_link_libraries(qt09_kurs_project
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Gui
   Qt${QT_VERSION_MAJOR}::Widgets
@@ -53,13 +53,13 @@ target_link_libraries(kurs_project
   ${BOOST_ASIO}
 )
 
-target_compile_options(kurs_project PRIVATE
+target_compile_options(qt09_kurs_project PRIVATE
   -Wall
   -pedantic
 )
 
 include(GNUInstallDirs)
-install(TARGETS kurs_project
+install(TARGETS qt09_kurs_project
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

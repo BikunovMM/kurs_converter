@@ -55,8 +55,6 @@ void Server::Requester::register_user(const char *login,
                     return;
                 }
 
-                std::cout << "Connected to server." << std::endl;
-
                 asio::async_write(*socket,
                   asio::buffer(req_str),
                     [socket, log_err_lb, login, password, reg_btn,
@@ -68,8 +66,6 @@ void Server::Requester::register_user(const char *login,
                             delete(socket);
                             return;
                         }
-
-                        std::cout << "writing to server." << std::endl;
 
                         char *buffer = (char*)malloc(128 * sizeof(char));
                         if (!buffer) {
@@ -98,27 +94,19 @@ void Server::Requester::register_user(const char *login,
                                 }
 
                                 buffer[bytes] = '\0';
-
-                                std::cout << "reading from server: " << buffer << std::endl;
-
                                 json::object res_json = json::parse(buffer).as_object();
-                                std::cout << "..." << std::endl;
                                 const long long status = res_json["status"].as_int64();
 
                                 if (status == Server::OP_OK) {
-                                    //swithc ui to registered
                                     if (!Sessions::Manager::contains_session()) {
                                         reg_btn->setHidden(true);
                                         log_btn->setHidden(true);
                                         prof_btn->setHidden(false);
                                         sett_btn->setHidden(false);
-                                        printf("set hidden.\n");
                                     }
 
                                     Sessions::Manager::save_session(login, password, res_json["iduser"].as_int64());
                                     diag->done(0);
-
-                                    printf("registered\n");
                                 }
                                 else {
                                     log_err_lb->setText("this login is already taken.");
@@ -182,8 +170,6 @@ static void login_user(char *login,
                     return;
                 }
 
-                std::cout << "Connected to server." << std::endl;
-
                 asio::async_write(*socket,
                     asio::buffer(req_str),
                     [socket, log_err_lb, pass_err_lb, login,
@@ -195,8 +181,6 @@ static void login_user(char *login,
                             delete(socket);
                             return;
                         }
-
-                        std::cout << "writing to server." << std::endl;
 
                         char *buffer = (char*)malloc(128 * sizeof(char));
                         if (!buffer) {
@@ -224,13 +208,10 @@ static void login_user(char *login,
                                     return;
                                 }
 
-                                std::cout << "reading from server" << std::endl;
-
                                 json::object res_json = json::parse(buffer).as_object();
                                 const long long status = res_json["status"].as_int64();
 
                                 if (status == Server::OP_OK) {
-                                    //swithc ui to registered
                                     if (!Sessions::Manager::contains_session()) {
                                         reg_btn->setHidden(true);
                                         log_btn->setHidden(true);
@@ -239,8 +220,6 @@ static void login_user(char *login,
                                     }
 
                                     Sessions::Manager::save_session(login, password, res_json["iduser"].as_int64());
-
-                                    printf("registered");
                                 }
                                 else if (status == Server::OP_LOGIN_ERR){
                                     log_err_lb->setText("wrong login");
@@ -282,7 +261,6 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
         req_json["iduser"]    = Sessions::Manager::iduser();
 
         req_str = json::serialize(req_json);
-        std::cout << "req_str: " << req_str << std::endl;
 
         socket->async_connect(
             tcp::endpoint(ip::make_address(Server::IP()),
@@ -295,7 +273,6 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                     delete(socket);
                     return;
                 }
-                std::cout << "connected: "<< req_str << std::endl;
 
                 asio::async_write(*socket, asio::buffer(req_str),
                     [socket, show_banner]
@@ -308,8 +285,6 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                             delete(socket);
                             return;
                         }
-
-                        std::cout << "async_write: " << std::endl;
 
                         char *buffer = (char*)
                             malloc(11 * sizeof(char));
@@ -332,8 +307,6 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                                     return;
                                 }
 
-                                std::cout << "async_read_some" << std::endl;
-
                                 const long long buffer_len =
                                     std::strtoll(buffer, nullptr, 10);
 
@@ -345,8 +318,6 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                                     delete(socket);
                                     return;
                                 }
-
-                                std::cout << "buffer len: " << buffer_len << std::endl;
 
                                 asio::async_read(*socket,
                                     asio::buffer(buffer, buffer_len),

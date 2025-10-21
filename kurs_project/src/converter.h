@@ -8,9 +8,7 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
-
 #include "ServerRequester.hpp"
-//#include "MainWindow.hpp"
 
 extern "C" {
     #include <libavformat/avformat.h>
@@ -53,15 +51,7 @@ namespace converter{
         std::size_t sample_rate;
         std::size_t bit_rate;
     };
-/*
-    struct fmt_par {
-        AVCodecID       vcodec;
-        AVCodecID       acodec;
-        AVCodecID       icodec;
-        AVPixelFormat   pixfmt;
-        AVSampleFormat  smplfmt;
-    };
-*/
+
     struct fmtpar {
         const char*  vcodec;
         const char*  acodec;
@@ -90,176 +80,6 @@ namespace converter{
                 const struct convertation_data *cdata,
                 std::function<void(char*, long long)> show_banner);
     struct file_data get_file_data(const char *filename);
-
-    //struct fmtpar get_fmt_supp_par(const char *format, enum MEDIA_TYPE type);
-/*
-    struct img_par {
-        std::vector<std::pair<AVCodecID, std::vector<AVPixelFormat>>> img_codecs;
-    };
-    struct aud_par {
-        std::vector<std::pair<AVCodecID, std::vector<AVSampleFormat>>> aud_codecs;
-    };
-    struct vid_par {
-        struct img_par vid_codecs;
-        struct aud_par audio_codecs;
-    };
-
-
-    const std::map<const char*, struct img_par> img_formats = {
-        {
-            "png",
-            {
-                {AV_CODEC_ID_PNG, {AV_PIX_FMT_RGBA, AV_PIX_FMT_RGB24, AV_PIX_FMT_BGRA, AV_PIX_FMT_BGR24, AV_PIX_FMT_PAL8, AV_PIX_FMT_GRAY8}}
-            }
-        },
-        {
-            "jpg",
-            {
-                {AV_CODEC_ID_MJPEG, {AV_PIX_FMT_YUV420P, AV_PIX_FMT_YUVJ420P}}
-            }
-        },
-        {
-            "jpeg",
-            {
-                {AV_CODEC_ID_MJPEG, {AV_PIX_FMT_YUV420P, AV_PIX_FMT_YUVJ420P}}
-            }
-        },
-        {
-            "ico",
-            {
-                {AV_CODEC_ID_PNG, {AV_PIX_FMT_RGBA, AV_PIX_FMT_RGB24, AV_PIX_FMT_BGRA, AV_PIX_FMT_BGR24},
-                    {AV_CODEC_ID_BMP, {AV_PIX_FMT_BGRA, AV_PIX_FMT_BGR24}}},
-
-            }
-        },
-        {
-            "webp",
-            {
-                {AV_CODEC_ID_WEBP, {AV_PIX_FMT_BGRA, AV_PIX_FMT_YUV420P}}
-            }
-        },
-        {
-            "bmp",
-            {
-                {AV_CODEC_ID_BMP, {AV_PIX_FMT_BGRA, AV_PIX_FMT_BGR24, AV_PIX_FMT_BGR8, AV_PIX_FMT_GRAY8, AV_PIX_FMT_PAL8, AV_PIX_FMT_MONOBLACK}}
-            }
-        }
-    };
-
-    const std::map<const char*, struct img_par> audio_formats = {
-        {
-         "mp3",
-         {
-            {AV_CODEC_ID_MP3, {AV_SAMPLE_FMT_S16}}
-         }
-        },
-        {
-         "opus",
-         {
-            {AV_CODEC_ID_OPUS, {AV_SAMPLE_FMT_FLT, AV_SAMPLE_FMT_S16}}
-         }
-        },
-        {
-         "ogg",
-         {
-            {AV_CODEC_ID_VORBIS, {AV_SAMPLE_FMT_FLTP}}
-         }
-        },
-        {
-         "wav",
-         {
-            {AV_CODEC_ID_PCM_S16LE, {AV_SAMPLE_FMT_S16, AV_SAMPLE_FMT_FLT}}
-         }
-        },
-        {
-         "aac",
-         {
-            {AV_CODEC_ID_AAC, {AV_SAMPLE_FMT_FLTP, AV_SAMPLE_FMT_S16}}
-         }
-        },
-        {
-         "flac",
-         {
-            {AV_CODEC_ID_FLAC, {AV_SAMPLE_FMT_S16, AV_SAMPLE_FMT_S32}}
-         }
-        },
-    };
-
-    const std::map<const char*, struct vid_par> video_formats = {
-        {
-         "mp4",
-         {
-          {{AV_CODEC_ID_H264, {AV_PIX_FMT_YUV420P}}, {AV_CODEC_ID_HEVC, {AV_PIX_FMT_YUV420P}}, {AV_CODEC_ID_MPEG4, {AV_PIX_FMT_YUV420P}}},
-          {audio_formats["aac"], audio_formats["mp3"]}
-          //{{AV_CODEC_ID_AAC, {AV_SAMPLE_FMT_FLTP, AV_SAMPLE_FMT_S16}}, {AV_CODEC_ID_MP3, {AV_SAMPLE_FMT_S16}}}
-         }
-        },
-        {
-         "mov",
-         {
-           {{AV_CODEC_ID_H264, {AV_PIX_FMT_YUV420P}}, {AV_CODEC_ID_HEVC, {AV_PIX_FMT_YUV420P}}, {AV_CODEC_ID_MPEG4, {AV_PIX_FMT_YUV420P}}},
-           {audio_formats["aac"], audio_formats["mp3"]}
-          //{{AV_CODEC_ID_AAC, {AV_SAMPLE_FMT_FLTP, AV_SAMPLE_FMT_S16}}, {AV_CODEC_ID_MP3, {AV_SAMPLE_FMT_S16}}}
-         }
-        },
-        {
-         "mkv",
-         {
-            {{AV_CODEC_ID_H264, {AV_PIX_FMT_YUV420P}}, {AV_CODEC_ID_HEVC, {AV_PIX_FMT_YUV420P}}, {AV_CODEC_ID_MPEG4, {AV_PIX_FMT_YUV420P}}},
-            {audio_formats["aac"], audio_formats["mp3"], audio_formats["opus"], audio_formats["ogg"], audio_formats["flac"]},
-            //{{AV_CODEC_ID_AAC, {AV_SAMPLE_FMT_FLTP, AV_SAMPLE_FMT_S16}}, {AV_CODEC_ID_MP3, {AV_SAMPLE_FMT_S16}},
-             //{AV_CODEC_ID_OPUS, {AV_SAMPLE_FMT_FLT, AV_SAMPLE_FMT_S16}}, {AV_CODEC_ID_VORBIS, {AV_SAMPLE_FMT_FLT}},
-             //{AV_CODEC_ID_FLAC, {AV_SAMPLE_FMT_S16, AV_SAMPLE_FMT_S32}}}
-         }
-        },
-        {
-         "webm",
-         {
-             {{AV_CODEC_ID_VP9, {AV_PIX_FMT_YUV420P}}, {AV_CODEC_ID_VP8, {AV_PIX_FMT_YUV420P}}, {AV_CODEC_ID_AV1, {AV_PIX_FMT_YUV420P}}},
-             {audio_format["opus"], audio_format["ogg"]}
-             //{{AV_CODEC_ID_OPUS, {AV_SAMPLE_FMT_FLT, AV_SAMPLE_FMT_S16}}, {AV_CODEC_ID_VORBIS, {AV_SAMPLE_FMT_FLT}}}
-         }
-        }
-    };
-  */
-
-
-    constexpr enum AVCodecID img_codecs[] = {
-        AV_CODEC_ID_PNG,
-        AV_CODEC_ID_MJPEG,
-        AV_CODEC_ID_MJPEG,
-        AV_CODEC_ID_PNG,
-        AV_CODEC_ID_WEBP,
-        AV_CODEC_ID_BMP
-    };
-    constexpr enum AVCodecID aud_codecs[] = {
-        AV_CODEC_ID_MP3,
-        AV_CODEC_ID_OPUS,
-        AV_CODEC_ID_VORBIS,
-        AV_CODEC_ID_PCM_S16LE,
-        AV_CODEC_ID_AAC,
-        AV_CODEC_ID_FLAC
-    };
-    constexpr enum AVCodecID vid_codecs[] = {
-        AV_CODEC_ID_H264,
-    };
-
-    constexpr enum AVPixelFormat img_pix_fmts[] = {
-        AV_PIX_FMT_RGBA,
-        AV_PIX_FMT_YUV420P,
-        AV_PIX_FMT_YUV420P,
-        AV_PIX_FMT_RGBA,
-        AV_PIX_FMT_RGBA,
-        AV_PIX_FMT_BGR24
-    };
-    constexpr enum AVSampleFormat aud_smpl_fmts[] = {
-        AV_SAMPLE_FMT_S16,
-        AV_SAMPLE_FMT_S16,
-        AV_SAMPLE_FMT_FLT,
-        AV_SAMPLE_FMT_S16,
-        AV_SAMPLE_FMT_FLTP,
-        AV_SAMPLE_FMT_S16
-    };
 
     constexpr char* supp_vid_ext[] = {
          (char*)"mp4",

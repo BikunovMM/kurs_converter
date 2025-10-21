@@ -194,6 +194,7 @@ qt09_kurs_project_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QStackedWidget \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QTableView \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QVBoxLayout \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QWidget \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractbutton.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractitemview.h \
@@ -752,8 +753,8 @@ qt09_kurs_project_autogen/timestamp: \
 	C:/Users/m9337/Documents/Qute/qt09_kurs_project/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/CMakeFiles/3.30.5/CMakeSystem.cmake \
 	C:/Users/m9337/Documents/Qute/qt09_kurs_project/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/qt09_kurs_project_autogen/moc_predefs.h \
 	C:/Users/m9337/Documents/Qute/qt09_kurs_project/resources/resources.qrc \
-	C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/MainWindow.cpp \
-	C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/MainWindow.hpp \
+	C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/MainWidget.cpp \
+	C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/MainWidget.hpp \
 	C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/ServerRequester.cpp \
 	C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/ServerRequester.hpp \
 	C:/Users/m9337/Documents/Qute/qt09_kurs_project/src/SessionsManager.cpp \
