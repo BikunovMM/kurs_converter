@@ -40,33 +40,6 @@ constexpr int RAND_FN_LEN = 36;
 constexpr int ASCII_FST_NUM_POS = 48;
 constexpr int ASCII_FST_LET_POS = 97;
 
-
-
-/* Class, thats represents main application window
- *
- * Shortcuts:
- *  fst     - first
- *  num     - number
- *  let     - letter
- *  pos     - position
- *  win     - window
- *  w       - width
- *  h       - height
- *  len     - length
- *  fn      - filename
- *  gen     - generate
- *  upl     - upload
- *  downl   - download
- *  auth    - authorization (account)
- *  log     - login         (account)
- *  reg     - register      (account)
- *  prof    - profile       (account)
- *  sett    - settings      (account)
- *  btn     - button
- *  cbox    - check box
- *  def     - default       (filename)
- *  rand    - random        (filename)
- */
 class MainWidget : public QWidget
 {
     Q_OBJECT

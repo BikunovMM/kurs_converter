@@ -1,5 +1,4 @@
 #include "MainWidget.hpp"
-//#include "converter.h"
 
 MainWidget::MainWidget()
     : QWidget()

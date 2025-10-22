@@ -1,5 +1,10 @@
 #include "SessionsManager.hpp"
 
+Sessions::Manager::~Manager()
+{
+    delete(settings);
+}
+
 void Sessions::Manager::save_session(const char *login, const char *password, long long iduser) {
     settings->setValue("user/login", login);
     settings->setValue("user/password", password);

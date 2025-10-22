@@ -1,16 +1,9 @@
 #include "ServerRequester.hpp"
 #include <boost/json/src.hpp>
 
-Server::Requester::Requester()
-    //: io_ctx_(), socket_(io_ctx_)
-{
+Server::Requester::Requester(){}
 
-}
-
-Server::Requester::~Requester()
-{
-
-}
+Server::Requester::~Requester(){}
 
 void Server::Requester::register_user(const char *login,
                                       const char *password,
