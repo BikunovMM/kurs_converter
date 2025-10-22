@@ -65,3 +65,10 @@
 7746	305331	7828319621522094	CMakeFiles/kurs_project.dir/src/main.cpp.obj	f0f5d89388de52e9
 7796	326843	7828319622022462	CMakeFiles/kurs_project.dir/src/ServerRequester.cpp.obj	fbf0a25cbc328f00
 326844	345407	7828322812502125	kurs_project.exe	194b437b40098a07
+347	1448	7828374069281209	kurs_project_autogen/timestamp	6244fb5550c2d47c
+347	1448	7828374069281209	kurs_project_autogen/mocs_compilation.cpp	6244fb5550c2d47c
+347	1448	7828374069281209	C:/Users/m9337/Desktop/kurs_converter/kurs_project/build/Desktop_Qt_6_9_0_MinGW_64_bit-Release/kurs_project_autogen/timestamp	6244fb5550c2d47c
+347	1448	7828374069281209	C:/Users/m9337/Desktop/kurs_converter/kurs_project/build/Desktop_Qt_6_9_0_MinGW_64_bit-Release/kurs_project_autogen/mocs_compilation.cpp	6244fb5550c2d47c
+1451	75956	7828374080311209	CMakeFiles/kurs_project.dir/src/converter.cpp.obj	f81eedef15bfb307
+1472	76160	7828374080530813	CMakeFiles/kurs_project.dir/src/ServerRequester.cpp.obj	fbf0a25cbc328f00
+76160	79645	7828374827410888	kurs_project.exe	194b437b40098a07

@@ -266,7 +266,7 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                     delete(socket);
                     return;
                 }
-std::cout << __LINE__ << std::endl;
+
                 asio::async_write(*socket, asio::buffer(req_str),
                     [socket, show_banner]
                     (const boost::system::error_code& err,
@@ -278,14 +278,14 @@ std::cout << __LINE__ << std::endl;
                             delete(socket);
                             return;
                         }
-std::cout << __LINE__ << std::endl;
+
                         char *buffer = (char*)
                             malloc(11 * sizeof(char));
                         if (!buffer) {
                             delete(socket);
                             return;
                         }
-std::cout << __LINE__ << std::endl;
+
                         socket->async_read_some(
                             asio::buffer(buffer, 10),
                             [socket, buffer, show_banner]
@@ -299,7 +299,7 @@ std::cout << __LINE__ << std::endl;
                                     free(buffer);
                                     return;
                                 }
-std::cout << __LINE__ << std::endl;
+
                                 const long long buffer_len =
                                     std::strtoll(buffer, nullptr, 10);
 
@@ -311,7 +311,7 @@ std::cout << __LINE__ << std::endl;
                                     delete(socket);
                                     return;
                                 }
-std::cout << __LINE__ << std::endl;
+
                                 asio::async_read(*socket,
                                     asio::buffer(buffer, buffer_len),
                                     asio::transfer_exactly(buffer_len),
@@ -326,9 +326,9 @@ std::cout << __LINE__ << std::endl;
                                             free(buffer);
                                             return;
                                         }
-std::cout << __LINE__ << std::endl;
+
                                         show_banner(buffer, buffer_len);
-std::cout << __LINE__ << std::endl;
+
                                         delete(socket);
                                     }
                                 );
