@@ -695,7 +695,7 @@ void MainWidget::download_file()
                 cdata.smplfmt = AV_SAMPLE_FMT_NONE;
                 cdata.max_width = 0;
                 cdata.sample_rate = 0;
-                cdata.bit_rate = -1;
+                cdata.bit_rate = 0;
 
                 switch (p2_pixfmt_cbox->currentIndex()) {
                 case 0:/*YUV420P*/

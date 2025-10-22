@@ -641,8 +641,6 @@ namespace converter
             codecpar = ifmt_ctx->streams[in_pkt->stream_index]->codecpar;
 
             if (codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
-                //reading = 1;
-
                 if (!cpy_video) {
                     res = avcodec_send_packet(dec_ctx[0], in_pkt);
                     if (res < 0) {
@@ -972,7 +970,9 @@ namespace converter
             avformat_close_input(&ifmt_ctx);
         }
 
-        Server::Requester::add_convertation_to_history(inpath, outpath, show_banner);
+        if (res >= 0) {
+            Server::Requester::add_convertation_to_history(inpath, outpath, show_banner);
+        }
 
         return res;
     }

@@ -1,13 +1,15 @@
 #ifndef SERVERREQUESTER_HPP
 #define SERVERREQUESTER_HPP
 
+#include <cstdlib>
+#include <QFile>
 #include <QLabel>
 #include <QPushButton>
 #include <QDialog>
 #include <boost/asio.hpp>
 #include <boost/json.hpp>
-#include <iostream>
 #include "SessionsManager.hpp"
+#include <iostream>
 
 namespace ip   = boost::asio::ip;
 namespace asio = boost::asio;
@@ -41,6 +43,14 @@ namespace Server {
         static void add_convertation_to_history(const char *inpath,
                                                 const char *outpath,
                                                 std::function<void(char*, long long)> show_banner);
+
+        static int set_up();
+        static char* ip();
+        static int port();
+
+    private:
+        static char     ip_[16];
+        static unsigned short port_;
     };
 
     enum SQL_OPERATIONS {
@@ -55,13 +65,6 @@ namespace Server {
         OP_LOGIN_ERR,
         OP_PASSWORD_ERR
     };
-
-    constexpr char* IP() {
-        return (char*)"127.0.0.1";
-    }
-    constexpr int PORT() {
-        return 8765;
-    }
 }
 
 #endif // SERVERREQUESTER_HPP

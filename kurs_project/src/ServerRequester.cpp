@@ -39,8 +39,8 @@ void Server::Requester::register_user(const char *login,
         req_str = json::serialize(req_json);
 
         socket->async_connect(
-            tcp::endpoint(ip::make_address(Server::IP()),
-            Server::PORT()),
+            tcp::endpoint(ip::make_address(Server::Requester::ip()),
+            Server::Requester::port()),
             [socket, req_str, log_err_lb, login, password,
              reg_btn, log_btn, prof_btn, sett_btn, diag]
                 (const boost::system::error_code& err) mutable
@@ -129,14 +129,14 @@ void Server::Requester::register_user(const char *login,
     }
 }
 
-static void login_user(char *login,
-                       char *password,
-                       QLabel *log_err_lb,
-                       QLabel *pass_err_lb,
-                       QPushButton *reg_btn,
-                       QPushButton *log_btn,
-                       QPushButton *prof_btn,
-                       QPushButton *sett_btn)
+void Server::Requester::login_user(const char *login,
+                                   const char *password,
+                                   QLabel *log_err_lb,
+                                   QLabel *pass_err_lb,
+                                   QPushButton *reg_btn,
+                                   QPushButton *log_btn,
+                                   QPushButton *prof_btn,
+                                   QPushButton *sett_btn)
 {
     try {
         if (!log_err_lb) {
@@ -154,8 +154,8 @@ static void login_user(char *login,
         req_str = json::serialize(req_json);
 
         socket->async_connect(
-            tcp::endpoint(ip::make_address(Server::IP()),
-            Server::PORT()),
+            tcp::endpoint(ip::make_address(Server::Requester::ip()),
+            Server::Requester::port()),
             [socket, req_str, log_err_lb, pass_err_lb, login,
             password, reg_btn, log_btn, prof_btn, sett_btn]
             (const boost::system::error_code& err) mutable
@@ -258,13 +258,13 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
         req_json["operation"] = Server::SQL_INSERT_CONVERTS;
         req_json["infn"]    = inpath;
         req_json["outfn"]   = outpath;
-        req_json["iduser"]    = Sessions::Manager::iduser();
+        req_json["iduser"]  = Sessions::Manager::iduser();
 
         req_str = json::serialize(req_json);
 
         socket->async_connect(
-            tcp::endpoint(ip::make_address(Server::IP()),
-            Server::PORT()),
+            tcp::endpoint(ip::make_address(Server::Requester::ip()),
+            Server::Requester::port()),
             [socket, req_str, show_banner]
             (const boost::system::error_code& err) mutable
             {
@@ -273,7 +273,7 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                     delete(socket);
                     return;
                 }
-
+std::cout << __LINE__ << std::endl;
                 asio::async_write(*socket, asio::buffer(req_str),
                     [socket, show_banner]
                     (const boost::system::error_code& err,
@@ -285,14 +285,14 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                             delete(socket);
                             return;
                         }
-
+std::cout << __LINE__ << std::endl;
                         char *buffer = (char*)
                             malloc(11 * sizeof(char));
                         if (!buffer) {
                             delete(socket);
                             return;
                         }
-
+std::cout << __LINE__ << std::endl;
                         socket->async_read_some(
                             asio::buffer(buffer, 10),
                             [socket, buffer, show_banner]
@@ -306,7 +306,7 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                                     free(buffer);
                                     return;
                                 }
-
+std::cout << __LINE__ << std::endl;
                                 const long long buffer_len =
                                     std::strtoll(buffer, nullptr, 10);
 
@@ -318,7 +318,7 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                                     delete(socket);
                                     return;
                                 }
-
+std::cout << __LINE__ << std::endl;
                                 asio::async_read(*socket,
                                     asio::buffer(buffer, buffer_len),
                                     asio::transfer_exactly(buffer_len),
@@ -333,9 +333,9 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
                                             free(buffer);
                                             return;
                                         }
-
+std::cout << __LINE__ << std::endl;
                                         show_banner(buffer, buffer_len);
-
+std::cout << __LINE__ << std::endl;
                                         delete(socket);
                                     }
                                 );
@@ -351,3 +351,35 @@ void Server::Requester::add_convertation_to_history(const char *inpath,
         fprintf(stderr, "Failed to add_convertation_to_history. Err: %s", e.what());
     }
 }
+
+int Server::Requester::set_up()
+{
+    std::string str_buff{};
+    char           port_buff[6];
+
+    QFile conf_file(":/configs/server_config.txt");
+
+    if (!conf_file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        fprintf(stderr, "! conf_file isn\'t opened.\n");
+        return 1;
+    }
+
+    str_buff = conf_file.readLine().toStdString();
+    std::strncpy(ip_, str_buff.c_str(), str_buff.length() - 1);
+    str_buff = conf_file.readLine().toStdString();
+    std::strncpy(port_buff, str_buff.c_str(), str_buff.length() - 1);
+
+    port_ = std::strtol(port_buff, nullptr, 10);
+
+    return 0;
+}
+
+char* Server::Requester::ip() {
+    return ip_;
+}
+int Server::Requester::port() {
+    return port_;
+}
+
+char           Server::Requester::ip_[16] = "127.0.0.1";
+unsigned short Server::Requester::port_   = 8765;

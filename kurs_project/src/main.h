@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <QApplication>
+#include <QFile>
 #include "MainWidget.hpp"
 
 #endif // MAIN_H
